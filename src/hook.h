@@ -39,8 +39,8 @@ namespace WCCF
 
     static void InstallHooks()
     {
-        // SKSE::AllocTrampoline(0x10);
-        // WaterRigidBodyHook::Install();
-        // DeleteWaterHook::Install();
+        SKSE::AllocTrampoline(0x10);
+        WaterRigidBodyHook::Install();
+        DeleteWaterHook::Install();
     }
 }
