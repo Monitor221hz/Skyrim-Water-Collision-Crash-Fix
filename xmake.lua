@@ -1,5 +1,5 @@
 -- info to change
-local name = "commonlibsse-ng-template"
+local name = "WaterCollisionCrashFix"
 local author = "monitor221hz"
 local description = "SKSE64 plugin template using CommonLibSSE-NG"
 local version = "0.0.0"
