@@ -12,7 +12,7 @@ namespace WCCF
     public:
         static void Install()
         {
-            REL::Relocation<std::uintptr_t> target{REL::RelocationID(19309,19736), REL::Relocate(0x802, 0x898)};
+            REL::Relocation<std::uintptr_t> target{REL::RelocationID(19309, 19736), REL::Relocate(0x802, 0x898)};
             auto &trampoline = SKSE::GetTrampoline();
             _SetWaterRigidBody = trampoline.write_call<5>(target.address(), SetWaterRigidBody);
         }
