@@ -19,18 +19,7 @@ namespace RE
 
 	namespace BGSWaterCollisionManager
 	{
-
-		template <class T>
-		struct BSScrapArray
-		{
-			T *data;				// 00
-			void *allocator;		// 08
-			std::uint32_t size;		// 10
-			std::uint32_t capacity; // 14
-		};
-		static_assert(sizeof(BSScrapArray<void *>) == 0x18);
-
-		class BGSWaterUpdateI : public hkReferencedObject
+		class BGSWaterUpdateI 
 		{
 		public:
 			enum Flag : std::uint32_t
@@ -38,8 +27,13 @@ namespace RE
 				kNone = 0,
 				kInert = 1 << 0,
 			};
+			inline static constexpr auto RTTI = RTTI_BGSWaterCollisionManager__BGSWaterUpdateI;
+			inline static constexpr auto VTABLE = VTABLE_BGSWaterCollisionManager__BGSWaterUpdateI;
 
-			BSScrapArray<void *> trackedBodies; // 10
+			void* vftable;						// 00
+			std::uint32_t flags;				// 08
+			std::uint32_t pad0C;				// 0C
+			BSTArray<void *> trackedBodies; 	// 10
 			BGSWaterUpdateI *next;				// 28
 			TESWaterForm *waterType;			// 30
 			void *context;						// 38
