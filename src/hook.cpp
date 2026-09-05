@@ -16,9 +16,40 @@ namespace WCCF
         auto *body = _SetWaterRigidBody(a_mem, a_params);
         if (body)
         {
+            auto refCount = body->GetRefCount();
             body->IncRefCount();
-            SKSE::log::info("Pin");
+            SKSE::log::info("Pin {} -> {}", refCount, body->GetRefCount());
         }
         return body;
+    }
+    void WaterStoreHook::Store(RE::ExtraDataList *a_extraDataList, bhkPlaceableWater *a_water)
+    {
+        bhkPlaceableWater* old = nullptr; 
+        if (auto wd = a_extraDataList->GetByType<RE::ExtraWaterData>())
+        {
+            old = wd->unk18 ? reinterpret_cast<bhkPlaceableWater*>(wd->unk18.get()) : nullptr;
+        }
+        const bool retire = old && old != a_water;
+        if (retire)
+        {
+            old->AddReference();
+        }
+        _Store.call(a_extraDataList, a_water);
+
+        if (retire)
+        {
+            auto& waterUpdate = old->updateI;
+            Unlink(&waterUpdate);
+            SetInert(&waterUpdate, true);
+            if (auto* body = waterUpdate.body)
+            {
+                auto refCount = body->GetRefCount();
+                body->DecRefCount();
+                waterUpdate.body = nullptr;
+                SKSE::log::info("Unpin RefCount: {} -> {}", refCount, body->GetRefCount());
+            }
+            old->RemoveReference();
+        }
+
     }
 }

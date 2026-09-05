@@ -4,15 +4,41 @@
 
 namespace WCCF
 {
-    // Up	p	TESObjectREFR__sub_1402917F0+802	call    sub_14029D510
-    // AE 	p	sub_1402E57B0+898	call    sub_1402F1640
+
     using bhkPlaceableWater = RE::BGSWaterCollisionManager::bhkPlaceableWater;
-    class WaterRigidBodyHook
+    using BGSWaterUpdateI = RE::BGSWaterCollisionManager::BGSWaterUpdateI;
+    class WaterStoreHook
     {
+        public:
+        static void Install()
+        {
+            REL::Relocation<std::uintptr_t> target{REL::VariantID(11938, 12077, 0x138050)};
+            _Store = safetyhook::create_inline(target.address(), &Store);
+        }
+        private:
+        static void Store(RE::ExtraDataList* a_extraDataList, bhkPlaceableWater* a_water);
+        static inline SafetyHookInline _Store;
+
+        static BGSWaterUpdateI* Unlink(BGSWaterUpdateI* a_this)
+        {//1404C0FA0
+            using func_t = decltype(Unlink);
+            REL::Relocation<func_t> func{REL::VariantID(31303, 32087, 0x4D10F0)};
+            return func(a_this);
+        }
+        static int32_t SetInert(BGSWaterUpdateI* a_this, bool a_inert)
+        {//1404C0F80
+            using func_t = decltype(SetInert);
+            REL::Relocation<func_t> func{REL::VariantID(31302, 32086, 0x4D10D0)};
+            return func(a_this, a_inert);
+        }
+    };
+    class WaterRigidBodyHook
+    {    // Up	p	TESObjectREFR__sub_1402917F0+802	call    sub_14029D510
+    // AE 	p	sub_1402E57B0+898	call    sub_1402F1640
     public:
         static void Install()
         {
-            REL::Relocation<std::uintptr_t> target{REL::RelocationID(19309, 19736), REL::Relocate(0x802, 0x898)};
+            REL::Relocation<std::uintptr_t> target{REL::VariantID(19309, 19736, 0x2A2F00), REL::Relocate(0x802, 0x898, 0x802)};
             auto &trampoline = SKSE::GetTrampoline();
             _SetWaterRigidBody = trampoline.write_call<5>(target.address(), SetWaterRigidBody);
         }
@@ -28,7 +54,7 @@ namespace WCCF
     public:
         static void Install()
         {
-            REL::Relocation<std::uintptr_t> target{REL::RelocationID(19520, 19946)};
+            REL::Relocation<std::uintptr_t> target{REL::VariantID(19520, 19946, 0x2B0500)};
             _Delete = safetyhook::create_inline(target.address(), &Delete);
         }
 
@@ -42,5 +68,6 @@ namespace WCCF
         SKSE::AllocTrampoline(0x10);
         WaterRigidBodyHook::Install();
         DeleteWaterHook::Install();
+        WaterStoreHook::Install();
     }
 }

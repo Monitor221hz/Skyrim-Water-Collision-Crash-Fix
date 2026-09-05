@@ -30,7 +30,7 @@ namespace RE
 		};
 		static_assert(sizeof(BSScrapArray<void *>) == 0x18);
 
-		class BGSWaterUpdateI
+		class BGSWaterUpdateI : public hkReferencedObject
 		{
 		public:
 			enum Flag : std::uint32_t
@@ -39,10 +39,6 @@ namespace RE
 				kInert = 1 << 0,
 			};
 
-			// members
-			void *vftable;						// 00
-			std::uint32_t flags;				// 08
-			std::uint32_t pad0C;				// 0C
 			BSScrapArray<void *> trackedBodies; // 10
 			BGSWaterUpdateI *next;				// 28
 			TESWaterForm *waterType;			// 30
