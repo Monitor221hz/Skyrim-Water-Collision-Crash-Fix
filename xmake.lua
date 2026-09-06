@@ -2,7 +2,7 @@
 local name = "WaterCollisionCrashFix"
 local author = "monitor221hz"
 local description = "SKSE64 plugin template using CommonLibSSE-NG"
-local version = "0.0.0"
+local version = "1.0.1"
 local license = "GPL-3.0"
 
 -- set minimum xmake version
