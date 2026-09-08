@@ -64,5 +64,16 @@ namespace RE
 			std::uint8_t pad29[7];	  // 29
 		};
 		static_assert(sizeof(bhkAutoWater) == 0x30);
+
+		class bhkWaterfall : public hkpPhantomCallbackShape  // 00
+		{
+		public:
+			inline static constexpr auto RTTI = RTTI_BGSWaterCollisionManager__bhkWaterfall;
+			inline static constexpr auto VTABLE = VTABLE_BGSWaterCollisionManager__bhkWaterfall;
+
+			BGSWaterUpdateI updateI;  // 20
+
+		};
+		static_assert(offsetof(bhkWaterfall, updateI) == 0x20);
 	};
 }

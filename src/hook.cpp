@@ -52,4 +52,41 @@ namespace WCCF
         }
 
     }
+    RE::bhkRigidBody *WaterFallRigidBodyHook::SetWaterFallRigidBody(char *a_mem, void *a_params)
+    {
+        auto *body = _SetWaterFallRigidBody(a_mem, a_params);
+        if (body)
+        {
+            auto refCount = body->GetRefCount();
+            body->IncRefCount();
+            SKSE::log::info("Pin Waterfall {} -> {}", refCount, body->GetRefCount());
+        }
+        return body;
+    }
+    void WaterFallStoreHook::Store(RE::ExtraDataList *a_extraDataList, bhkWaterfall *a_waterfall)
+    {
+        bhkWaterfall* old = nullptr; 
+        if (auto wd = a_extraDataList->GetByType<RE::ExtraWaterData>())
+        {
+            old = wd->unk10 ? reinterpret_cast<bhkWaterfall*>(wd->unk10) : nullptr;
+        }
+
+        if (old)
+        {
+            Unlink(&old->updateI);
+            SetInert(&old->updateI, true);
+        }
+
+        _Store.call(a_extraDataList, a_waterfall);
+
+        if (old && old != a_waterfall)
+        {
+            if (auto* body = old->updateI.body)
+            {
+                body->DecRefCount();
+                old->updateI.body = nullptr;
+                SKSE::log::info("Unpin Waterfall RefCount: {} -> {}", body->GetRefCount() + 1, body->GetRefCount());
+            }
+        }
+    }
 }
